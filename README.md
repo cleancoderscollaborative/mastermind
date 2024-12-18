@@ -182,16 +182,17 @@ See the [Git Notes](#git-notes) section for details.
 
 ## Option 2: Develop in a GitHub Codespace
 
+You will need your own GitHub account for this option, the first step is to make your
+own copy of the repository.
 GitHub Codespaces are Docker containers running on servers at GitHub.
-When you launch a Codespace 
+When you launch a Codespace it is on a specific branch, by default "main".
+Any work you do in the Codespace is abandoned unless you commit the work back to the branch.
 
 1. Fork this repository to your own GitHub account:
     ![Fork Repository](./.assets/fork-repository.png)
 
-1. Create your own branch in your copy of the respository.
-You should name the branch as \<your GitHub username\>-\<main\>.
 1. In the new repository, click the Code button, select the Codespaces tab, and create a new Codespace
-on *your development branch*.
+on the *main* branch.
 1. A new Docker container will be created at GitHub with a random name like "solid-sniffle-6pp459r6j53qg6".
 1. A copy of VSCode will be launched as a single-page application in your browser, and will be
 connected to the Docker container where the project will be developed.
