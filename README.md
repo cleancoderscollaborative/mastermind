@@ -68,6 +68,7 @@ $ is the command prompt, and there are three possible commands to check:
     $ python3 --version
     $ py --version
     ```
+
 1. Check for *git*:
     ```
     $ git --version
@@ -82,6 +83,7 @@ $ is the command prompt, and there are three possible commands to check:
         ```
     1. Download and install from python.org: https://docs.python.org/3/using/mac.html
     1. Download and install from Anaconda.com: https://www.anaconda.com/download
+
 1. Install git if you do not have it; two options:
     1. Install with Homebrew:
         ```
@@ -105,6 +107,7 @@ $ is the command prompt, and there are three possible commands to check:
         ```
     1. Download and install from python.org: https://docs.python.org/3/using/windows.html
     1. Download and install from Anaconda.com: https://www.anaconda.com/download
+
 1. Install Visual Studio Code, if necessary:
     1. Install with Homebrew:
         ```
@@ -120,6 +123,7 @@ $ is the command prompt, and there are three possible commands to check:
     $ sudo apt update; sudo apt install python3          # Debian Linux (Ubuntu, etc.)
     $ sudo yum check-update; sudo yum install python3    # RHEL (Red Hat, Centos, etc.)
     ```
+
 1. Install Visual Studio Code, if necessary:
     1. Install with Homebrew:
         ```
@@ -133,6 +137,7 @@ $ is the command prompt, and there are three possible commands to check:
 1. We recommend that you set up an SSH Key at GitHub to pull and push repository changes,
 that will be much easier than using a password.
 See the [Git Notes](#git-notes) section for details.
+
 1. Install the necessary extensions to the VSCode environment:
     1. Click the extensions icon on the toolbar. ![Extensions](./.assets/extensions-button.png)
     2. Add (if not already installed) Microsoft Python, Microsoft Python Debugger, Microsoft Live Share, and
@@ -182,6 +187,7 @@ When you launch a Codespace
 
 1. Fork this repository to your own GitHub account:
     ![Fork Repository](./.assets/fork-repository.png)
+
 1. Create your own branch in your copy of the respository.
 You should name the branch as \<your GitHub username\>-\<main\>.
 1. In the new repository, click the Code button, select the Codespaces tab, and create a new Codespace
