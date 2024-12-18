@@ -54,6 +54,11 @@ merge with the Clean Coders Collaborative repository.
 
 ## Configuration
 
+As mentioned in the overview above, there are two options for the development environment:
+
+* [Option 1: Local development environment (preferred)](#option-1-local-development-environment-preferred)
+* [Option 2: Develop in a GitHub Codespace](#option-2-develop-in-a-github-codespace)
+
 ### Option 1: Local development environment (preferred)
 
 1. At a terminal window or command prompt (all systems) check to see if you have Python 3.

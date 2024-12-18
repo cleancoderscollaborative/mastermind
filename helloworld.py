@@ -4,14 +4,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/assets')
 
 @app.route("/")
 def hello_world():
 
     return '''
         <div style="background-color: lightgray; text-align: center; min-height: calc(100vh - (100vh - 300px) / 2); padding-top: calc((100vh - 300px) / 2);">
-            <img src="/static/images/clean-code.png" /><h1>Hello World, good to go!</h1>
+            <img src="/assets/images/clean-code.png" /><h1>Hello World, good to go!</h1>
         </div>
     '''
 
