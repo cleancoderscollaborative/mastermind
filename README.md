@@ -306,7 +306,14 @@ See the documentation below in [*Git Resources*](#git-resources).
 * GitHub recommendations on flow: https://docs.github.com/en/get-started/using-github/github-flow
 * Atlassian documentation for *Feature Branch Workflow, Gitflow Workflow,* and *Forking Workflow*: https://www.atlassian.com/git/tutorials/comparing-workflows.
 
-## Footnotes
+## Resources
+
+### Other Implementations
+
+* Colorado School of Mines online: http://csunplugged.mines.edu/codebreaker/game.cgi
+* iOS AI implementation: https://croobie.com/MastermindAI/
+* Machine learning code example: https://github.com/egeromin/mastermind
+* AI-based example: https://github.com/yoshitomo-matsubara/mastermind-ai
 
 ### Homebrew
 
