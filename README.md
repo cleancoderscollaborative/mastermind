@@ -57,11 +57,16 @@ merge with the Clean Coders Collaborative repository.
 ### Option 1: Local development environment (preferred)
 
 1. At a terminal window or command prompt (all systems) check to see if you have Python 3.
-$ is the command prompt, and there are two possible commands to check:
-```
-$ python --version
-$ python3 --version
-```
+$ is the command prompt, and there are three possible commands to check:
+    ```
+    $ python --version
+    $ python3 --version
+    $ py --version
+    ```
+1. Check for *git*:
+    ```
+    $ git --version
+    ```
 
 #### Apple MacOS
 
@@ -176,9 +181,15 @@ When you launch a Codespace
 You should name the branch as \<your GitHub username\>-\<main\>.
 1. In the new repository, click the Code button, select the Codespaces tab, and create a new Codespace
 on *your development branch*.
-1. A new Docker container will be created at GitHub with a random name like "Jelly-Bean".
+1. A new Docker container will be created at GitHub with a random name like "solid-sniffle-6pp459r6j53qg6".
 1. A copy of VSCode will be launched as a single-page application in your browser, and will be
 connected to the Docker container where the project will be developed.
+1. Wait for the last command to run in the terminal panel at the screen bottom (your
+username will be different):
+    ```
+    . ./.devcontainer/postAttachCommand.sh
+    @jmussman ➜ /workspaces/mastermind (main) $ . ./.devcontainer/postAttachCommand.sh
+    ```
 1. On the toolbar click the run-debug icon ![Run-Debug](./.assets/run-debug.png)
 1. At the top right of the panel select and launch the configuration *Hello, World!*:
 
@@ -190,6 +201,9 @@ It will have a funny name (different from this one):
     Application starting on https://solid-sniffle-6pp459r6j53qg6-3000.app.github.dev/
     ```
 1. Cmd/ctrl-click the URL (cmd on a Mac, ctrl on Windows or Linux) to launch the browser page.
+You may get a message about connecting to a port on another user's Codespace, that happens because
+third-party cookies are not enabled.
+Ignore it, and move on.
 1. Verify the application works and shows the logo and message:
 
     ![Verify](./.assets/verify-image.png)
@@ -208,12 +222,6 @@ If you are creating branches for specific backlog tasks, make sure you pick the 
 Make sure you save and commit changes to the repository in your GitHub account if you want to keep your work before
 the Codespace is destroyed.
 * The limits on free Codespace use may be found here: https://docs.github.com/en/billing/managing-billing-for-your-products/managing-billing-for-github-codespaces/about-billing-for-github-codespaces#monthly-included-storage-and-core-hours-for-personal-accounts.
-
-## Verification
-
-Run the helloworld.py application to verify the environment:
-
-1. 
 
 ## Git Notes
 
