@@ -62,13 +62,17 @@ As mentioned in the overview above, there are two options for the development en
 ### Option 1: Local development environment (preferred)
 
 1. At a terminal window or command prompt (all systems) check to see if you have Python 3.
-$ is the command prompt, and there are three possible commands to check:
+$ is the command prompt.
+There are three possible commands to check depending on your platform and
+how python was installed, not every one will work if python is installed:
     ```
     $ python --version
     $ python3 --version
     $ py --version
     ```
-
+1. If python is installed, make a note of which python command worked.
+Throughout this guide we will just use *python* in the examples, but you need to replace
+it with whatever the python command on your system is.
 1. Check for *git*:
     ```
     $ git --version
@@ -83,7 +87,15 @@ $ is the command prompt, and there are three possible commands to check:
         ```
     1. Download and install from python.org: https://docs.python.org/3/using/mac.html
     1. Download and install from Anaconda.com: https://www.anaconda.com/download
-
+1. Check and make a note of which python command you just installed.
+It could be *python*, *python3*, or *py*.
+Different installations name the command differently, and any one of them is OK.
+Just remember to substitute what you have for *python* is the following examples:
+    ```
+    $ python --version
+    $ python3 --version
+    $ py 
+    ```
 1. Install git if you do not have it; two options:
     1. Install with Homebrew:
         ```
@@ -107,7 +119,15 @@ $ is the command prompt, and there are three possible commands to check:
         ```
     1. Download and install from python.org: https://docs.python.org/3/using/windows.html
     1. Download and install from Anaconda.com: https://www.anaconda.com/download
-
+1. Check and make a note of which python command you just installed.
+It could be *python*, *python3*, or *py*.
+Different installations name the command differently, and any one of them is OK.
+Just remember to substitute what you have for *python* is the following examples:
+    ```
+    $ python --version
+    $ python3 --version
+    $ py 
+    ```
 1. Install Visual Studio Code, if necessary:
     1. Install with Homebrew:
         ```
@@ -118,12 +138,20 @@ $ is the command prompt, and there are three possible commands to check:
 
 #### Linux
 
-1. Install Python 3 if you do not have it:
+1. Install Python 3 if you do not have it ($ is the command prompt):
     ```
     $ sudo apt update; sudo apt install python3          # Debian Linux (Ubuntu, etc.)
     $ sudo yum check-update; sudo yum install python3    # RHEL (Red Hat, Centos, etc.)
     ```
-
+1. Check and make a note of which python command you just installed.
+It could be *python*, *python3*, or *py*.
+Different installations name the command differently, and any one of them is OK.
+Just remember to substitute what you have for *python* is the following examples:
+    ```
+    $ python --version
+    $ python3 --version
+    $ py 
+    ```
 1. Install Visual Studio Code, if necessary:
     1. Install with Homebrew:
         ```
@@ -137,36 +165,60 @@ $ is the command prompt, and there are three possible commands to check:
 1. We recommend that you set up an SSH Key at GitHub to pull and push repository changes,
 that will be much easier than using a password.
 See the [Git Notes](#git-notes) section for details.
-
+1. Launch VSCode.
+If this is a new installation of VSCode, you will land on a screen to guide you through setup.
+For this project you do not have to do anything here.
+We are not using anything
+like Copilot, but you are free to explore and customize your setup
+it if you want:
+![VSCode Setup](.assets/vscode-setup.png)
 1. Install the necessary extensions to the VSCode environment:
     1. Click the extensions icon on the toolbar. ![Extensions](./.assets/extensions-button.png)
-    2. Add (if not already installed) Microsoft Python, Microsoft Python Debugger, Microsoft Live Share, and
+    1. In the *Search Extensions in Marketplace* input field, one at a time, search for
+    the following four extensions: Microsoft Python, Microsoft Python Debugger, Microsoft Live Share, and
     Ritwik Dey Liver Server:
     ![Required Extensions](./.assets/extensions.png)
-1. Fork this repository to your own GitHub account:
+    1. As you find each one, look for an *install* or *uninstall* button.
+    If you find an install button, click it to install the extension.
+    Hint: installing the Python extension should include the debugger extension too.
+    ![Extension Install](./.assets/extensions-install.png)
+1. In this project at GitHub click
+    the *Fork* button to copy this repository to your own GitHub account:
     ![Fork Repository](./.assets/fork-repository.png)
+1. In your own copy of the repository, click on the green *Code* button, make sure the *Local*
+tab is selected, and copy the URL.
+If you set up SSH you will see that URL, otherwise it will be an https:// URL:
+![GitHub Clone](.assets/github-clone.png)
 1. Clone your copy to your local machine using git at the command prompt/terminal:
     ```
     $ cd <your projects directory>
     $ git clone <your repository path>
     ```
-1. Open VSCode and select the repository folder you just cloned.
-1. Open a terminal window.
-1. Create a local Python virtual environment (substitute python3 or py for python depending on installation):
+1. Back in VSCode use the *File &rarr; Open Folder* menu option and open the repository
+folder you just cloned to your local computer.
+1. In VSCode open an the embedded terminal window with the *View &rarr; Terminal* menu option.
+1. Create a local Python virtual environment in the project folder.
+Remember that $ is the command prompt, and you may need to substitute your python command name
+(*python3* or *py* ) for *python* in this example:
     ```
     $ python -m venv .venv
     $ . .venv/bin/activate        # MacOS or Linux
     $ .venv\Scripts\activate      # Windows
     ```
-1. Use *pip* to install the Python modules necessary for this project:
+1. Use the Python package manager *pip* to install the Python modules necessary for this project:
     ```
-    $ pyrhon -m pip install coverage mock flask python-dotenv 
+    $ python -m pip install coverage mock flask python-dotenv 
     ```
+1. You may have seen a "toast" popup window asking you to confirm the new virtual environment
+python as the interpreter and confirmed that.
+If you did not, use the *View &rarr; Command Palette...* menu option to open the command palette.
+Enter and pick when available in the drop-down list *Python: Select Interpreter*, and then in the
+next window pick the interpreter in the *./.venv/bin* folder (it should be labeled *recommended*):
+    ![Python Select Interpreter](.assets/python-select-interpreter.png)
 1. On the toolbar click the run-debug icon ![Run-Debug](./.assets/run-debug.png)
 1. At the top right of the panel select and launch the configuration *Hello, World!*:
 
     ![Run-Debug-Launch-Configuration](./.assets/run-debug-launch-configuration.png)
-
 1. In the terminal panel that opened look for the output line beginning with "Application starting on...":
     ```
     Application starting on http://localhost:3000/
@@ -177,7 +229,10 @@ See the [Git Notes](#git-notes) section for details.
     ![Verify](./.assets/verify-image.png)
 
 1. Close the browser page.
-1. Find the debug controls and click the red-bordered stop button to terminate the application: ![Run-Debug-Stop](./.assets/run-debug-stop.png)
+1. Find the debug controls and click the red-bordered stop button to terminate the application.
+By default they float at the top-center of the VSCode
+application, but you can move them anywhere you like with the drag bar on the left:
+![Run-Debug-Stop](./.assets/run-debug-stop.png)
 1. Congratulations, everything is set to start!
 
 ## Option 2: Develop in a GitHub Codespace
