@@ -186,16 +186,16 @@ it if you want:
     the *Fork* button to copy this repository to your own GitHub account:
     ![Fork Repository](./.assets/fork-repository.png)
 1. In your own copy of the repository, click on the green *Code* button, make sure the *Local*
-tab is selected, and copy the URL.
-If you set up SSH you will see that URL, otherwise it will be an https:// URL:
-![GitHub Clone](.assets/github-clone.png)
-1. Clone your copy to your local machine using git at the command prompt/terminal:
-    ```
-    $ cd <your projects directory>
-    $ git clone <your repository path>
-    ```
-1. Back in VSCode use the *File &rarr; Open Folder* menu option and open the repository
-folder you just cloned to your local computer.
+    tab is selected, and copy the URL.
+    If you set up SSH you will see github@github.com: URL, otherwise it will be an https:// URL:
+    ![GitHub Clone](.assets/github-clone.png)
+1. Back in VSCode click on the *Source Control* toolbar icon, then the *Clone Repository*
+    button in the panel, and paste the repository URL into the input box that appears and
+    press the return/enter key.
+    You will be prompted for a folder to put the clone in; it wants a projects folder
+    that will contain the new repository folder:
+    ![VSCode Clone Repository](.assets/vscode-clone-repository.png)
+1. When VSCode asks if you want to open the new repository choose yes.
 1. In VSCode open an the embedded terminal window with the *View &rarr; Terminal* menu option.
 1. Create a local Python virtual environment in the project folder.
 Remember that $ is the command prompt, and you may need to substitute your python command name
@@ -234,6 +234,7 @@ By default they float at the top-center of the VSCode
 application, but you can move them anywhere you like with the drag bar on the left:
 ![Run-Debug-Stop](./.assets/run-debug-stop.png)
 1. Congratulations, everything is set to start!
+Follow this link for [a tour of VSCode and how Microsoft Live Share will be used](https://cleancoderscollaborative.github.io/vscode/).
 
 ## Option 2: Develop in a GitHub Codespace
 
@@ -278,6 +279,7 @@ Ignore it, and move on.
 1. Close the browser page.
 1. Find the debug controls and click the red-bordered stop button to terminate the application: ![Run-Debug-Stop](./.assets/run-debug-stop.png)
 1. Congratulations, everything is set to start!
+Follow this link for [a tour of VSCode and how Microsoft Live Share will be used](https://cleancoderscollaborative.github.io/vscode/).
 
 ### Notes:
 
