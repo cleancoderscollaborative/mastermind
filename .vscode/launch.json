@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Hello, World!",
+            "name": "Main",
             "type": "debugpy",
             "request": "launch",
-            "program": "helloworld.py",
+            "program": "src/main.py",
             "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
