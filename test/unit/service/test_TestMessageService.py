@@ -1,8 +1,8 @@
-import unittest
+from unittest import TestCase
 
 from src.service.MessageService import MessageService
 
-class TestMessageService(unittest.TestCase):
+class TestMessageService(TestCase):
 
     def setUp(self):
 

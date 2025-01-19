@@ -1,14 +1,9 @@
-import xml
-import os
-import threading
-import unittest
-
-from dotenv import load_dotenv
+from unittest import TestCase
 from xml.etree import ElementTree
 
 from src.main import app
 
-class TestMain(unittest.TestCase):
+class TestMain(TestCase):
 
     @classmethod
     def setUpClass(cls):

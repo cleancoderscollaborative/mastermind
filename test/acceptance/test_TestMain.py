@@ -1,8 +1,5 @@
-import os
-import threading
-import unittest
-
 from dotenv import load_dotenv
+from os import getenv
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
@@ -10,12 +7,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+from threading import Thread
+from unittest import TestCase
 from webdriver_manager.chrome import ChromeDriverManager
 from werkzeug.serving import make_server
 
 from src.main import app
 
-class TestMain(unittest.TestCase):
+class TestMain(TestCase):
 
     @classmethod
     def launch_app(cls):
@@ -30,8 +29,8 @@ class TestMain(unittest.TestCase):
 
         load_dotenv()
 
-        cls.service_port = os.getenv('SERVICEPORT')
-        cls.thread = threading.Thread(target = cls.launch_app)
+        cls.service_port = getenv('SERVICEPORT')
+        cls.thread = Thread(target = cls.launch_app)
         cls.thread.start()
 
         options = Options()
