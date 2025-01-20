@@ -5,7 +5,9 @@ from importlib import reload
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-class TestHomeController(TestCase):
+# rom src.controller.HomeController import HomeController
+
+class TestMain(TestCase):
 
     @classmethod
     def setUpClass(cls):
