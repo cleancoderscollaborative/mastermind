@@ -35,6 +35,7 @@ your GitHub and local copies to stay in sync with the meetup.
 ### Prior to the first meetup
 
 1. Follow the [*Configuration*](#configuration) instructions to use either your local computer or a GitHub Codespace for development.
+1. Optionally review the [Project Overview](#project-overview) and [Testing](#testing) guides blelow.
 1. Review the rules for Mastermind: https://en.wikipedia.org/wiki/Mastermind_(board_game)
 
 ### At the meetups
@@ -291,6 +292,129 @@ If you are creating branches for specific backlog tasks, make sure you pick the 
 Make sure you save and commit changes to the repository in your GitHub account if you want to keep your work before
 the Codespace is destroyed.
 * The limits on free Codespace use may be found here: https://docs.github.com/en/billing/managing-billing-for-your-products/managing-billing-for-github-codespaces/about-billing-for-github-codespaces#monthly-included-storage-and-core-hours-for-personal-accounts.
+
+## Project Overview
+
+This is a traditional web application.
+This project does not need to introduce the learning curve of a specific single-page application
+framework to contend with.
+All of that may come later.
+
+This project has a given layout to avoid refocusing on how to structure the work.
+For small projects a structure based on the purpose of components is sufficient, which is how
+this project is laid out.
+For larger projects typically folks break it down by features and then the component purpose under the feature.
+
+The argument about singular vs plural namining conventions will never be settled :)
+
+```
+src/
+  main.py
+  assets/
+    images/
+    script/
+    style/
+  controller/
+  model/
+  service/
+  view/
+test/
+  acceptance/
+  integration/
+    service/
+  unit/
+    controller/
+    service/
+```
+
+## Testing
+
+The project is blessed with a group of unit and integration tests.
+These are examples supporting the Flask framework the project will be built around and the initial home page.
+The intention is to provide a template for creating tests during test-driven development while the project is on-going, especially when folks are not that familiar with Python unittest.
+
+### Running Tests
+
+There are several ways to launch the tests:
+
+1. Click on the toolbar icon for testing, and launch the tests from there.
+Every test suite and individual test has buttons to run or debug:
+
+    ![VSCode Test](.assets/vscode-tests.png)
+
+1. Click on the run-debug toolbar icon and in the panel select the launch configuration
+for *All Tests* or *Coverage All Tests* and run the tests:
+
+    ![VSCode Test](.assets/vscode-run-tests.png)
+
+1. Run the tests from the command line in the terminal window ($ is the prompt).
+The first command discovers and runs all the tests, the second with code-coverage,
+the third a particular test suite, and the fourth a particular test suite for coverage
+(in this case the unit tests for main):
+
+    ```
+    $ python -m unittest discover -s test -v
+    $ python -m coverage run --source=src -m unittest discover -s test -v; python -m coverage report
+    $ python -m unittest test/unit/test_TestMain.py -v  
+    $ python -m coverage run --source=src -m unittest test/unit/test_TestMain.py -v  
+    ```
+
+### Testing Modules in Isolation
+
+A problem arises when the client code you are testing imports its own dependencies.
+An obvious solution to this is never import anything and inject everything.
+That is unrealisitic, because the core modules that are included with Python and plenty of add-on modules
+are valid dependencies.
+But what about unit testing in isolation?
+
+In testing frameworks we rely on facilities to "hoist" established mocks before any code loads the dependencies.
+Unfortunately Python to does not provide any mechanisim to hoist.
+And the first code to load a module locks that module in, every other piece of code loads that identity.
+
+On the other hand, Python is a dynamic language and nothing stops any code from making changes to any object during
+run-time.
+So, we can easily replace components of modules on the fly with mocks for testing.
+The issue is that in some circumstances the code under test (CUT) has to be forced to reload the module to see the
+mocks instead of the original components.
+But it is possible.
+
+The module *test/unit/test_TestMain.py* is one example where this is done, and all of the documentation about how
+to make it happen is in that file.
+
+### Unit Testing
+
+Test controllers and services.
+
+Unit tests for model data is not really neccessary, it should just be data structures.
+Functionality should be in a service module, not in the model.
+
+Unit tests for views end up just testing the Flask template rendering engine.
+View content testing belongs in acceptance testing.
+
+If a persistent data source is added, testing that whould just test the persistence engine.
+
+### Integration Testing
+
+Integration testing is limited to the services.
+
+If the controllers just make decisions about dispatching as they should,
+the decision-making process is already covered in the controller unit tests.
+Testing the controllers would just be testing the Flask routing engine, and that should
+be an acceptance test issue.
+
+For the same reason that we do not do unit tests for model and persistent data, they will be
+picked up through the integration tests of the services.
+
+### Acceptance Testing
+
+Selenium is the core for end-to-end acceptance testing.
+To control the environment, The Werkzeug WSGI server is used for a clean startup and
+shutdown.
+
+At the beginning of the tests the application will launch in a headless browser, the default configuration is
+for Chrome but the test may be changed.
+Standard Selenium features are used to request server interaction and examine results.
+
 
 ## Git Notes
 

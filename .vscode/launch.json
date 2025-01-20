@@ -7,7 +7,7 @@
             "request": "launch",
             "module": "flask",
             "console": "integratedTerminal",
-            "args": "--app src/main.py run",
+            "args": "--app src/main.py:initialize run",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             }
@@ -18,7 +18,7 @@
             "request": "launch",
             "module": "flask",
             "console": "integratedTerminal",
-            "args": "--app src/main.py run --debug",
+            "args": "--app src/main.py:initialize run --debug",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             }
