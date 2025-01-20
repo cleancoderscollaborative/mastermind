@@ -41,7 +41,7 @@
             "request": "launch",
             "module": "coverage",
             "console": "integratedTerminal",
-            "args": "run --source=lambda_function,lambdaone -m unittest discover -s test -v",
+            "args": "run --source=src -m unittest discover -s test -v",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },

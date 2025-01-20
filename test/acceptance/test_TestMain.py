@@ -12,7 +12,7 @@ from unittest import TestCase
 from webdriver_manager.chrome import ChromeDriverManager
 from werkzeug.serving import make_server
 
-from src.main import app
+from src.main import initialize
 
 class TestMain(TestCase):
 
@@ -21,7 +21,7 @@ class TestMain(TestCase):
 
         # Use Werkzeug in the thread launched to contain the flask app and allow it to be shut down. 
 
-        cls.server = make_server('127.0.0.1', cls.service_port, app)
+        cls.server = make_server('127.0.0.1', cls.service_port, initialize())
         cls.server.serve_forever()
 
     @classmethod

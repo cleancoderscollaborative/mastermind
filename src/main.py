@@ -1,23 +1,30 @@
-import os
-import sys
-
-from flask import Flask
 from dotenv import load_dotenv
+from flask import Flask
+from os import getenv
 
 from src.controller.HomeController import HomeController
 from src.model.messages import messages
 from src.service.MessageService import MessageService
 
-load_dotenv()
+def initialize() -> Flask:
 
-app = Flask(__name__, static_folder = '../static', static_url_path = '/assets', template_folder = './view')
-message_service = MessageService(messages)
-homeController = HomeController(app, message_service)
+    load_dotenv()
 
-service_port = os.getenv('SERVICEPORT')
-domain = os.getenv('CODESPACE_NAME')
+    app = Flask(__name__, static_folder = './assets', static_url_path = '/assets', template_folder = './view')
+
+    message_service = MessageService(messages)
+
+    global _home_controller  # This protects the controller from garbage collection by placing the reference in global space.
+    _home_controller = HomeController(app, message_service)
+
+    return app
 
 def start():
+
+    app = initialize()
+
+    service_port = getenv('SERVICEPORT')
+    domain = getenv('CODESPACE_NAME')           # The service is Codespace-aware.
 
     if domain:
         print(f"Application starting on port https://{domain}-{service_port}.app.github.dev/")

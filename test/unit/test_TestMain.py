@@ -1,92 +1,167 @@
+import dotenv
+import io
+import os
 import flask
-import src.controller.HomeController
 
 from importlib import reload
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-# rom src.controller.HomeController import HomeController
+import src.controller.HomeController
+import src.model.messages
+import src.service.MessageService
+
+import src.main
 
 class TestMain(TestCase):
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
 
-        # Injecting mocks for Python packages is difficult because of the two ways that the package may be loaded.
-        # If loaded with a straight import, replacing classes or functions is straightforward, just replace the
-        # attribute with a new value. But we must assume that the client code is doing an 'from module import X',
-        # and in that case the client code gets the value of X before it can be mocked. Since it is a local reference
-        # now in the client code, mocking the original will not change X there. Worse, we have to load the client
-        # code in the test suite before the mock because Python does not have a mechanism for hoisting the mock.
+        # It is unrealistic to expect that dependencies will expect Python modules like sys or flask to be injected.
+        # These modules will be imported in one of two ways: import <module> or from <module> import <component>.
+        # In the first case mocking a component is straightforward, just use patch to change what it does.
         #
-        # The solution is "importlib", which allows us to simulate the hoist by reloading the imported code under
-        # test (CUT) after the mock has been established, which causes it to re-import its dependencies and now
-        # see the mock.
+        # Unfortunately we must assume that the client code is using the more popular second form, because that
+        # brings in just what you need by name. When this form is used, the local name is a copy of the reference
+        # to the original component, so mocking the module does ot work when the dependency is still using the
+        # original reference. Also unfortunately, Python has does not implement "hoisting" directly to
+        # replace an imported component.
+        # 
+        # The solution is "importlib", which allows us to simulate a hoist by reloading the code under
+        # test (CUT) after the mock has been established, which causes it to re-import the reference and pick
+        # up the mock reference instead. Because of the overhead we do this once in setUpClass in front of all
+        # the tests replacing the components with MagicMock instances, and then adjust the mocks in individual
+        # tests as necessary.
         #
-        # After the test we need to put things back the way they were in case something else depends on it.
+        # In the test suite we often import the whole module; for example here we import fthe whole lask module so
+        # we can get to the components that need to be mocked. Patch does not often help here because of the
+        # hierarchial structure of what is being used. Here we build that with MagicMock instances and do a
+        # direct replacement.
+        #
+        # After the tests we need to put the mocked components back the way they were in case some other code depending
+        # on it needs it to work the something else depends on it, so look to the tearDownClass method.
+        #
 
-        # Save the original reference to the function being mocked.
+        # Save the original reference to the components being mocked.
 
-        cls.mod_flask_render_template = flask.render_template
+        cls.mod_dotenv_load_dotenv = dotenv.load_dotenv
+        cls.mod_flask_Flask_class = flask.Flask
+        cls.mod_os_getenv = os.getenv
+        cls.mod_src_controller_HomeController_class = src.controller.HomeController.HomeController
+        cls.mod_src_model_messages_messages = src.model.messages.messages
+        cls.mod_src_service_MessageService_class = src.service.MessageService.MessageService
 
-        # Create the mock with MagicMock.
+        # Mock dotenv load.
 
-        cls.mock_render_template = MagicMock()
-        flask.render_template = cls.mock_render_template
+        dotenv.load_dotenv = cls.mock_dotenv_load_dotenv = MagicMock()
+
+        # Mock the Flask class and the app created from the class.
+
+        flask.Flask = cls.mock_flask_Flask_class = MagicMock()
+        cls.mock_flask_app = MagicMock()
+        cls.mock_flask_Flask_class.return_value = cls.mock_flask_app
+
+        # Mock the environment values and the service to call them.
+
+        cls.mock_environment = { 'SERVICEPORT': '5555', 'CODESPACE_NAME' : 'wonderful-widgets', 'TEST_RUN_PIPE': os.getenv('TEST_RUN_PIPE') }
+
+        def getenv(key):
+            return cls.mock_environment.get(key)
+
+        os.getenv = cls.mock_os_getenv = getenv
+
+        # Mock the message dictionary, the MessageService class, and the service created from the class.
+
+        src.model.messages.messages = cls.mock_src_model_messages_messages = { }
+        src.service.MessageService.MessageService = cls.mock_src_service_MessageService_class = MagicMock()
+        cls.mock_src_service_MessageService_service = MagicMock()
+        cls.mock_src_service_MessageService_class.return_value = cls.mock_src_service_MessageService_service
+
+        # Mock the HomeConroller class and the instance created.
+
+        src.controller.HomeController.HomeController = cls.mock_src_controller_HomeController_class = MagicMock()
+        cls.mock_src_controller_HomeController_controller = MagicMock()
+        cls.mock_src_controller_HomeController_class.return_value = cls.mock_src_controller_HomeController_controller
 
         # Reload the CUT so it re-imports things and gets the mock:
 
-        reload(src.controller.HomeController)
+        reload(src.main)
 
-        # We also need need mock the route decorator for the app object, and check that the correct routes are specified
-        # and linked to the correct methods. Fortunately, the HomeController expects the app object to be injected so we
-        # do not need a real one.
-        
-        cls.mock_app = MagicMock()
-        cls.mock_app.route = MagicMock()
-        cls.mock_app.route.decorator = MagicMock()
-        cls.mock_app.route.return_value = cls.mock_app.route.decorator
-        cls.mock_message_service = MagicMock()
+        # Patch stdout to check messages
+
+        cls.mock_stdout_context = patch('sys.stdout', new_callable=io.StringIO)
+        cls.mock_stdout_context.start()
     
     @classmethod
     def tearDownClass(cls) -> None:
 
-        # As describe above, the original must be inserted back into the flask module and
-        # then both modules reloaded for other test fixtures:
+        cls.mock_stdout_context.stop()
 
-        flask.render_template = cls.mod_flask_render_template
+        # Replace the original comopnents and reload.
 
-        reload(flask)
-        reload(src.controller.HomeController)
+        dotenv.load_dotenv = cls.mod_dotenv_load_dotenv
+        flask.Flask = cls.mod_flask_Flask_class
+        os.getenv = cls.mod_os_getenv
+        src.controller.HomeController.HomeController = cls.mod_src_controller_HomeController_class
+        src.model.messages.messages = cls.mod_src_model_messages_messages
+        src.service.MessageService.MessageService = cls.mod_src_service_MessageService_class
 
-        return super().tearDownClass()
-    
-    def setUp(self):
+        reload(src.main)
 
-        self.home_controller = src.controller.HomeController.HomeController(TestHomeController.mock_app, TestHomeController.mock_message_service)
+        super().tearDownClass()
 
-    def test_home_controller_home_path(self):
+    def setUp(self) -> None:
 
-        TestHomeController.mock_app.route.assert_called_once_with('/')
+        # Reset the mocks.
 
-    def test_home_controller_home_result(self):
+        TestMain.mock_dotenv_load_dotenv.reset_mock()
+        TestMain.mock_flask_Flask_class.reset_mock()
+        TestMain.mock_flask_app.reset_mock()
+        TestMain.mock_src_controller_HomeController_class.reset_mock()
+        TestMain.mock_src_controller_HomeController_controller = MagicMock()
 
-        TestHomeController.mock_message_service.get_message.return_value = 'pass'
-        TestHomeController.mock_render_template.return_value = 'pass'
+    def test_loads_environment(self) -> None:
 
-        args, kwargs = TestHomeController.mock_app.route.decorator.call_args
+        src.main.start()
 
-        result = args[0]()      # This is the inline function to flask routes the path to, the best way find it.
+        TestMain.mock_dotenv_load_dotenv.assert_called_once()
 
-        self.assertEqual('pass', result)
-    
-    def test_home_controller_home_render_parameters(self):
+    def test_creates_flask_app(self) -> None:
 
-        TestHomeController.mock_message_service.get_message.return_value = 'pass message'
-        TestHomeController.mock_render_template.return_value = 'pass'
+        src.main.start()
 
-        args, kwargs = TestHomeController.mock_app.route.decorator.call_args
+        TestMain.mock_flask_Flask_class.assert_called()
 
-        result = args[0]()
+    def test_initializes_home_controller(self) -> None:
 
-        TestHomeController.mock_render_template.assert_called_once_with('page/home.html', message = 'pass message')
+        src.main.start()
+
+        TestMain.mock_src_controller_HomeController_class.assert_called_once_with(TestMain.mock_flask_app, TestMain.mock_src_service_MessageService_service)
+
+    def test_run_flask(self) -> None:
+
+        src.main.start()
+
+        TestMain.mock_flask_app.run.assert_called_once_with(port = TestMain.mock_environment.get('SERVICEPORT'))
+
+    def test_service_start_message_with_codespace(self) -> None:
+        
+        expected = f'https://{os.getenv("CODESPACE_NAME")}-{os.getenv("SERVICEPORT")}'
+
+        src.main.start()
+
+        self.assertIn(expected, TestMain.mock_stdout_context.target.stdout.getvalue())
+
+    def test_service_start_message_without_codespace(self) -> None:
+
+        original_codespace_name = TestMain.mock_environment.get('CODESPACE_NAME')
+
+        TestMain.mock_environment['CODESPACE_NAME'] = None
+        expected = f'http://localhost:{os.getenv("SERVICEPORT")}'
+
+        src.main.start()
+
+        TestMain.mock_environment['CODESPACE_NAME'] = original_codespace_name
+
+        self.assertIn(expected, TestMain.mock_stdout_context.target.stdout.getvalue())

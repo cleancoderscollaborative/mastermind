@@ -10,18 +10,9 @@ class TestHomeController(TestCase):
     @classmethod
     def setUpClass(cls):
 
-        # Injecting mocks for Python packages is difficult because of the two ways that the package may be loaded.
-        # If loaded with a straight import, replacing classes or functions is straightforward, just replace the
-        # attribute with a new value. But we must assume that the client code is doing an 'from module import X',
-        # and in that case the client code gets the value of X before it can be mocked. Since it is a local reference
-        # now in the client code, mocking the original will not change X there. Worse, we have to load the client
-        # code in the test suite before the mock because Python does not have a mechanism for hoisting the mock.
         #
-        # The solution is "importlib", which allows us to simulate the hoist by reloading the imported code under
-        # test (CUT) after the mock has been established, which causes it to re-import its dependencies and now
-        # see the mock.
+        # See the unit test test_TestMain.py for a full description of how we hoist mocks to make these tests work.
         #
-        # After the test we need to put things back the way they were in case something else depends on it.
 
         # Save the original reference to the function being mocked.
 
@@ -29,8 +20,7 @@ class TestHomeController(TestCase):
 
         # Create the mock with MagicMock.
 
-        cls.mock_render_template = MagicMock()
-        flask.render_template = cls.mock_render_template
+        flask.render_template = cls.mock_render_template = MagicMock()
 
         # Reload the CUT so it re-imports things and gets the mock:
 
@@ -49,25 +39,22 @@ class TestHomeController(TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
 
-        # As describe above, the original must be inserted back into the flask module and
-        # then both modules reloaded for other test fixtures:
+        # Replace the original components and reload.
 
         flask.render_template = cls.mod_flask_render_template
-
-        reload(flask)
         reload(src.controller.HomeController)
 
-        return super().tearDownClass()
+        super().tearDownClass()
     
-    def setUp(self):
+    def setUp(self) -> None:
 
         self.home_controller = src.controller.HomeController.HomeController(TestHomeController.mock_app, TestHomeController.mock_message_service)
 
-    def test_home_controller_home_path(self):
+    def test_home_controller_home_path(self) -> None:
 
         TestHomeController.mock_app.route.assert_called_once_with('/')
 
-    def test_home_controller_home_result(self):
+    def test_home_controller_home_result(self) -> None:
 
         TestHomeController.mock_message_service.get_message.return_value = 'pass'
         TestHomeController.mock_render_template.return_value = 'pass'
@@ -78,7 +65,7 @@ class TestHomeController(TestCase):
 
         self.assertEqual('pass', result)
     
-    def test_home_controller_home_render_parameters(self):
+    def test_home_controller_home_render_parameters(self) -> None:
 
         TestHomeController.mock_message_service.get_message.return_value = 'pass message'
         TestHomeController.mock_render_template.return_value = 'pass'
