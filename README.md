@@ -217,9 +217,11 @@ Enter and pick when available in the drop-down list *Python: Select Interpreter*
 next window pick the interpreter in the *./.venv/bin* folder (it should be labeled *recommended*):
     ![Python Select Interpreter](.assets/python-select-interpreter.png)
 1. On the toolbar click the run-debug icon ![Run-Debug](./.assets/run-debug.png)
-1. At the top right of the panel select and launch the configuration *Hello, World!*:
+1. At the top right of the panel select the configuration *Main*, and then click
+the run arrow to the left of the dropdown:
 
     ![Run-Debug-Launch-Configuration](./.assets/run-debug-launch-configuration.png)
+    
 1. In the terminal panel that opened look for the output line beginning with "Application starting on...":
     ```
     Application starting on http://localhost:3000/
@@ -260,7 +262,8 @@ username will be different):
     @jmussman ➜ /workspaces/mastermind (main) $ . ./.devcontainer/postAttachCommand.sh
     ```
 1. On the toolbar click the run-debug icon ![Run-Debug](./.assets/run-debug.png)
-1. At the top right of the panel select and launch the configuration *Hello, World!*:
+1. At the top right of the panel select the configuration *Main*, and then click
+the run arrow to the left of the dropdown:
 
     ![Run-Debug-Launch-Configuration](./.assets/run-debug-launch-configuration.png)
 
