@@ -10,5 +10,5 @@ class HomeController:
         @app.route('/')
         def home():
 
-            result = render_template('page/home.html', message = message_service.get_message('hello'))
+            result = render_template('SayHello/home.html', message = message_service.get_message('hello'))
             return result

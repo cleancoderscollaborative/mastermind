@@ -1,4 +1,4 @@
-from src.model.messages import messages
+from src.SayHello.messageModel import messages
 
 class MessageService:
 

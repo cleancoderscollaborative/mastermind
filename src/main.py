@@ -2,15 +2,17 @@ from dotenv import load_dotenv
 from flask import Flask
 from os import getenv
 
-from src.controller.HomeController import HomeController
-from src.model.messages import messages
-from src.service.MessageService import MessageService
+from src.SayHello.HomeController import HomeController
+from src.SayHello.messageModel import messages
+from src.SayHello.MessageService import MessageService
 
 def initialize() -> Flask:
 
     load_dotenv()
 
-    app = Flask(__name__, static_folder = './assets', static_url_path = '/assets', template_folder = './view')
+    # The template folder is the source folder so that pages can be placed in the feature folders.
+
+    app = Flask(__name__, static_folder = './assets', static_url_path = '/assets', template_folder = '.')
 
     message_service = MessageService(messages)
 
