@@ -317,17 +317,13 @@ src/
     images/
     script/
     style/
-  controller/
-  model/
-  service/
-  view/
+  SayHello/
+  viewTemplates/
 test/
   acceptance/
   integration/
-    service/
   unit/
-    controller/
-    service/
+    SayHello/
 ```
 
 ## Testing

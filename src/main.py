@@ -12,7 +12,7 @@ def initialize() -> Flask:
 
     # The template folder is the source folder so that pages can be placed in the feature folders.
 
-    app = Flask(__name__, static_folder = './assets', static_url_path = '/assets', template_folder = '.')
+    app = Flask(__name__, static_folder = './_assets', static_url_path = '/assets', template_folder = '.')
 
     message_service = MessageService(messages)
 

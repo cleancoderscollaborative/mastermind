@@ -1,5 +1,3 @@
-from src.SayHello.messageModel import messages
-
 class MessageService:
 
     def __init__(self, messages):
