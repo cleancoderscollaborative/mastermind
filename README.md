@@ -208,7 +208,7 @@ Remember that $ is the command prompt, and you may need to substitute your pytho
     ```
 1. Use the Python package manager *pip* to install the Python modules necessary for this project:
     ```
-    $ python -m pip install coverage selenium mock flask python-dotenv
+    $ python -m pip install coverage selenium webdriver_manager mock flask python-dotenv
     ```
 1. You may have seen a "toast" popup window asking you to confirm the new virtual environment
 python as the interpreter and confirmed that.
