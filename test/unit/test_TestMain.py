@@ -43,27 +43,62 @@ class TestMain(TestCase):
         # on it needs it to work the something else depends on it, so look to the tearDownClass method.
         #
 
-        # Save the original reference to the components being mocked.
+        cls.mock_dotenv()
+        cls.mock_flask()
+        cls.mock_os()
+        cls.mock_HomeConroller()
+        cls.mock_messages()
+        cls.mock_MessageService()
+
+        reload(src.main)    # Reload the module to get the new references.
+
+        cls.patch_stdout()
+    
+    @classmethod
+    def tearDownClass(cls) -> None:
+
+        cls.restore_stdout()
+
+        cls.restore_dotenv()
+        cls.restore_flask()
+        cls.restore_os()
+        cls.restore_HomeController()
+        cls.restore_messages()
+        cls.restore_MessageService()
+
+        reload(src.main)    # Reload the module to get the restored references.
+
+        super().tearDownClass()
+
+    def setUp(self) -> None:
+
+        # Reset the mocks before each test.
+
+        TestMain.mock_dotenv_load_dotenv.reset_mock()
+        TestMain.mock_flask_Flask_class.reset_mock()
+        TestMain.mock_flask_app.reset_mock()
+        TestMain.mock_src_presentation_HomeController_class.reset_mock()
+        TestMain.mock_src_presentation_HomeController_controller = MagicMock()
+
+    @classmethod
+    def mock_dotenv(cls):
 
         cls.mod_dotenv_load_dotenv = dotenv.load_dotenv
-        cls.mod_flask_Flask_class = flask.Flask
-        cls.mod_os_getenv = os.getenv
-        cls.mod_src_presentation_HomeController_class = src.SayHello.Presentation.HomeController.HomeController
-        cls.mod_src_domain_messages_messages = src.SayHello.Domain.messageModel.messages
-        cls.mod_src_application_MessageService_class = src.SayHello.Application.MessageService.MessageService
-
-        # Mock dotenv load.
-
         dotenv.load_dotenv = cls.mock_dotenv_load_dotenv = MagicMock()
 
-        # Mock the Flask class and the app created from the class.
+    @classmethod
+    def mock_flask(cls):
 
+        cls.mod_flask_Flask_class = flask.Flask
         flask.Flask = cls.mock_flask_Flask_class = MagicMock()
         cls.mock_flask_app = MagicMock()
         cls.mock_flask_Flask_class.return_value = cls.mock_flask_app
 
-        # Mock the environment values and the service to call them.
+    @classmethod
+    def mock_os(cls):
 
+        cls.mod_os_getenv = os.getenv
+        
         cls.mock_environment = { 'SERVICEPORT': '5555', 'CODESPACE_NAME' : 'wonderful-widgets', 'TEST_RUN_PIPE': os.getenv('TEST_RUN_PIPE') }
 
         def getenv(key):
@@ -71,55 +106,68 @@ class TestMain(TestCase):
 
         os.getenv = cls.mock_os_getenv = getenv
 
-        # Mock the message dictionary, the MessageService class, and the service created from the class.
+    @classmethod
+    def mock_HomeConroller(cls):
 
-        src.SayHello.Domain.messageModel.messages = cls.mock_src_domain_messages_messages = { }
-        src.SayHello.Application.MessageService.MessageService = cls.mock_src_application_MessageService_class = MagicMock()
-        cls.mock_src_application_MessageService_service = MagicMock()
-        cls.mock_src_application_MessageService_class.return_value = cls.mock_src_application_MessageService_service
-
-        # Mock the HomeConroller class and the instance created.
-
+        cls.mod_src_presentation_HomeController_class = src.SayHello.Presentation.HomeController.HomeController
         src.SayHello.Presentation.HomeController.HomeController = cls.mock_src_presentation_HomeController_class = MagicMock()
         cls.mock_src_presentation_HomeController_controller = MagicMock()
         cls.mock_src_presentation_HomeController_class.return_value = cls.mock_src_presentation_HomeController_controller
 
-        # Reload the CUT so it re-imports things and gets the mock:
+    @classmethod
+    def mock_messages(cls):
 
-        reload(src.main)
+        cls.mod_src_domain_messages_messages = src.SayHello.Domain.messageModel.messages
+        src.SayHello.Domain.messageModel.messages = cls.mock_src_domain_messages_messages = { }
 
-        # Patch stdout to check messages
+    @classmethod
+    def mock_MessageService(cls):
+
+        cls.mod_src_application_MessageService_class = src.SayHello.Application.MessageService.MessageService
+        src.SayHello.Application.MessageService.MessageService = cls.mock_src_application_MessageService_class = MagicMock()
+        cls.mock_src_application_MessageService_service = MagicMock()
+        cls.mock_src_application_MessageService_class.return_value = cls.mock_src_application_MessageService_service
+
+    @classmethod
+    def patch_stdout(cls):
 
         cls.mock_stdout_context = patch('sys.stdout', new_callable=io.StringIO)
         cls.mock_stdout_context.start()
-    
+
     @classmethod
-    def tearDownClass(cls) -> None:
-
-        cls.mock_stdout_context.stop()
-
-        # Replace the original comopnents and reload.
+    def restore_dotenv(cls):
 
         dotenv.load_dotenv = cls.mod_dotenv_load_dotenv
+
+    @classmethod
+    def restore_flask(cls):
+
         flask.Flask = cls.mod_flask_Flask_class
+
+    @classmethod
+    def restore_os(cls):
+
         os.getenv = cls.mod_os_getenv
+
+    @classmethod
+    def restore_HomeController(cls):
+
         src.SayHello.Presentation.HomeController.HomeController = cls.mod_src_presentation_HomeController_class
+
+    @classmethod
+    def restore_messages(cls):
+
         src.SayHello.Domain.messageModel.messages = cls.mod_src_domain_messages_messages
+
+    @classmethod
+    def restore_MessageService(cls):
+
         src.SayHello.Application.MessageService.MessageService = cls.mod_src_application_MessageService_class
 
-        reload(src.main)
+    @classmethod
+    def restore_stdout(cls):
 
-        super().tearDownClass()
-
-    def setUp(self) -> None:
-
-        # Reset the mocks.
-
-        TestMain.mock_dotenv_load_dotenv.reset_mock()
-        TestMain.mock_flask_Flask_class.reset_mock()
-        TestMain.mock_flask_app.reset_mock()
-        TestMain.mock_src_presentation_HomeController_class.reset_mock()
-        TestMain.mock_src_presentation_HomeController_controller = MagicMock()
+        cls.mock_stdout_context.stop()
 
     def test_loads_environment(self) -> None:
 

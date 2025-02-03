@@ -14,41 +14,59 @@ class TestHomeController(TestCase):
         # See the unit test test_TestMain.py for a full description of how we hoist mocks to make these tests work.
         #
 
-        # Save the original reference to the function being mocked.
+        cls.mock_flask()
 
-        cls.mod_flask_render_template = flask.render_template
+        reload(src.SayHello.Presentation.HomeController)   # Reload the CUT to get the mock of Flask.
 
-        # Create the mock with MagicMock.
-
-        flask.render_template = cls.mock_render_template = MagicMock()
-
-        # Reload the CUT so it re-imports things and gets the mock:
-
-        reload(src.SayHello.Presentation.HomeController)
-
-        # We also need need mock the route decorator for the app object, and check that the correct routes are specified
-        # and linked to the correct methods. Fortunately, the HomeController expects the app object to be injected so we
-        # do not need a real one.
-        
-        cls.mock_app = MagicMock()
-        cls.mock_app.route = MagicMock()
-        cls.mock_app.route.decorator = MagicMock()
-        cls.mock_app.route.return_value = cls.mock_app.route.decorator
-        cls.mock_message_service = MagicMock()
+        cls.mock_route()
+        cls.mock_message_service()
     
     @classmethod
     def tearDownClass(cls) -> None:
 
-        # Replace the original components and reload.
+        cls.restore_message_service()
+        cls.restore_route()
+        cls.restore_flask()
 
-        flask.render_template = cls.mod_flask_render_template
-        reload(src.SayHello.Presentation.HomeController)
+        reload(src.SayHello.Presentation.HomeController)    # Reload the CUT to get the restored Flask.
 
         super().tearDownClass()
     
     def setUp(self) -> None:
 
         self.home_controller = src.SayHello.Presentation.HomeController.HomeController(TestHomeController.mock_app, TestHomeController.mock_message_service)
+
+    @classmethod
+    def mock_flask(cls):
+
+        cls.mod_flask_render_template = flask.render_template
+        flask.render_template = cls.mock_render_template = MagicMock()
+
+    @classmethod
+    def mock_route(cls):
+
+        cls.mock_app = MagicMock()
+        cls.mock_app.route = MagicMock()
+        cls.mock_app.route.decorator = MagicMock()
+        cls.mock_app.route.return_value = cls.mock_app.route.decorator
+
+    @classmethod
+    def mock_message_service(cls):
+
+        cls.mock_message_service = MagicMock()
+
+    @classmethod
+    def restore_flask(cls):
+
+        flask.render_template = cls.mod_flask_render_template
+
+    @classmethod
+    def restore_route(cls):
+        pass
+
+    @classmethod
+    def restore_message_service(cls):
+        pass
 
     def test_home_controller_home_path(self) -> None:
 
