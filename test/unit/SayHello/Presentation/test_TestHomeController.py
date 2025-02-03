@@ -1,5 +1,5 @@
 import flask
-import src.SayHello.HomeController
+import src.SayHello.Presentation.HomeController
 
 from importlib import reload
 from unittest import TestCase
@@ -24,7 +24,7 @@ class TestHomeController(TestCase):
 
         # Reload the CUT so it re-imports things and gets the mock:
 
-        reload(src.SayHello.HomeController)
+        reload(src.SayHello.Presentation.HomeController)
 
         # We also need need mock the route decorator for the app object, and check that the correct routes are specified
         # and linked to the correct methods. Fortunately, the HomeController expects the app object to be injected so we
@@ -42,13 +42,13 @@ class TestHomeController(TestCase):
         # Replace the original components and reload.
 
         flask.render_template = cls.mod_flask_render_template
-        reload(src.SayHello.HomeController)
+        reload(src.SayHello.Presentation.HomeController)
 
         super().tearDownClass()
     
     def setUp(self) -> None:
 
-        self.home_controller = src.SayHello.HomeController.HomeController(TestHomeController.mock_app, TestHomeController.mock_message_service)
+        self.home_controller = src.SayHello.Presentation.HomeController.HomeController(TestHomeController.mock_app, TestHomeController.mock_message_service)
 
     def test_home_controller_home_path(self) -> None:
 
@@ -74,4 +74,4 @@ class TestHomeController(TestCase):
 
         result = args[0]()
 
-        TestHomeController.mock_render_template.assert_called_once_with('SayHello/home.html', message = 'pass message')
+        TestHomeController.mock_render_template.assert_called_once_with('SayHello/Presentation/home.html', message = 'pass message')

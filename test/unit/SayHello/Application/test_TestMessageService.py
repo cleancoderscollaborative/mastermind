@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.SayHello.MessageService import MessageService
+from src.SayHello.Application.MessageService import MessageService
 
 class TestMessageService(TestCase):
 

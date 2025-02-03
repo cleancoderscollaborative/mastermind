@@ -7,9 +7,9 @@ from importlib import reload
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-import src.SayHello.HomeController
-import src.SayHello.messageModel
-import src.SayHello.MessageService
+import src.SayHello.Presentation.HomeController
+import src.SayHello.Domain.messageModel
+import src.SayHello.Application.MessageService
 
 import src.main
 
@@ -48,9 +48,9 @@ class TestMain(TestCase):
         cls.mod_dotenv_load_dotenv = dotenv.load_dotenv
         cls.mod_flask_Flask_class = flask.Flask
         cls.mod_os_getenv = os.getenv
-        cls.mod_src_controller_HomeController_class = src.SayHello.HomeController.HomeController
-        cls.mod_src_model_messages_messages = src.SayHello.messageModel.messages
-        cls.mod_src_service_MessageService_class = src.SayHello.MessageService.MessageService
+        cls.mod_src_presentation_HomeController_class = src.SayHello.Presentation.HomeController.HomeController
+        cls.mod_src_domain_messages_messages = src.SayHello.Domain.messageModel.messages
+        cls.mod_src_application_MessageService_class = src.SayHello.Application.MessageService.MessageService
 
         # Mock dotenv load.
 
@@ -73,16 +73,16 @@ class TestMain(TestCase):
 
         # Mock the message dictionary, the MessageService class, and the service created from the class.
 
-        src.SayHello.messageModel.messages = cls.mock_src_model_messages_messages = { }
-        src.SayHello.MessageService.MessageService = cls.mock_src_service_MessageService_class = MagicMock()
-        cls.mock_src_service_MessageService_service = MagicMock()
-        cls.mock_src_service_MessageService_class.return_value = cls.mock_src_service_MessageService_service
+        src.SayHello.Domain.messageModel.messages = cls.mock_src_domain_messages_messages = { }
+        src.SayHello.Application.MessageService.MessageService = cls.mock_src_application_MessageService_class = MagicMock()
+        cls.mock_src_application_MessageService_service = MagicMock()
+        cls.mock_src_application_MessageService_class.return_value = cls.mock_src_application_MessageService_service
 
         # Mock the HomeConroller class and the instance created.
 
-        src.SayHello.HomeController.HomeController = cls.mock_src_controller_HomeController_class = MagicMock()
-        cls.mock_src_controller_HomeController_controller = MagicMock()
-        cls.mock_src_controller_HomeController_class.return_value = cls.mock_src_controller_HomeController_controller
+        src.SayHello.Presentation.HomeController.HomeController = cls.mock_src_presentation_HomeController_class = MagicMock()
+        cls.mock_src_presentation_HomeController_controller = MagicMock()
+        cls.mock_src_presentation_HomeController_class.return_value = cls.mock_src_presentation_HomeController_controller
 
         # Reload the CUT so it re-imports things and gets the mock:
 
@@ -103,9 +103,9 @@ class TestMain(TestCase):
         dotenv.load_dotenv = cls.mod_dotenv_load_dotenv
         flask.Flask = cls.mod_flask_Flask_class
         os.getenv = cls.mod_os_getenv
-        src.SayHello.HomeController.HomeController = cls.mod_src_controller_HomeController_class
-        src.SayHello.messageModel.messages = cls.mod_src_model_messages_messages
-        src.SayHello.MessageService.MessageService = cls.mod_src_service_MessageService_class
+        src.SayHello.Presentation.HomeController.HomeController = cls.mod_src_presentation_HomeController_class
+        src.SayHello.Domain.messageModel.messages = cls.mod_src_domain_messages_messages
+        src.SayHello.Application.MessageService.MessageService = cls.mod_src_application_MessageService_class
 
         reload(src.main)
 
@@ -118,8 +118,8 @@ class TestMain(TestCase):
         TestMain.mock_dotenv_load_dotenv.reset_mock()
         TestMain.mock_flask_Flask_class.reset_mock()
         TestMain.mock_flask_app.reset_mock()
-        TestMain.mock_src_controller_HomeController_class.reset_mock()
-        TestMain.mock_src_controller_HomeController_controller = MagicMock()
+        TestMain.mock_src_presentation_HomeController_class.reset_mock()
+        TestMain.mock_src_presentation_HomeController_controller = MagicMock()
 
     def test_loads_environment(self) -> None:
 
@@ -137,7 +137,7 @@ class TestMain(TestCase):
 
         src.main.start()
 
-        TestMain.mock_src_controller_HomeController_class.assert_called_once_with(TestMain.mock_flask_app, TestMain.mock_src_service_MessageService_service)
+        TestMain.mock_src_presentation_HomeController_class.assert_called_once_with(TestMain.mock_flask_app, TestMain.mock_src_application_MessageService_service)
 
     def test_run_flask(self) -> None:
 
