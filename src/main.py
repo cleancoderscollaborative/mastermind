@@ -4,7 +4,7 @@ from os import getenv
 
 from src.SayHello.Presentation.HomeController import HomeController
 from src.SayHello.Domain.messageModel import messages
-from src.SayHello.Application.MessageService import MessageService
+from src.SayHello.ApplicationLogic.MessageService import MessageService
 
 def initialize() -> Flask:
 
@@ -12,7 +12,7 @@ def initialize() -> Flask:
 
     # The template folder is the source folder so that pages can be placed in the feature folders.
 
-    app = Flask(__name__, static_folder = './fluxFramework/assets', static_url_path = '/assets', template_folder = '.')
+    app = Flask(__name__, static_folder = './FluxServerFramework/assets', static_url_path = '/assets', template_folder = '.')
 
     message_service = MessageService(messages)
 
