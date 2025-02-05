@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 
 import src.SayHello.Presentation.HomeController
 import src.SayHello.Domain.messageModel
-import src.SayHello.Application.MessageService
+import src.SayHello.ApplicationLogic.MessageService
 
 import src.main
 
@@ -123,8 +123,8 @@ class TestMain(TestCase):
     @classmethod
     def mock_MessageService(cls):
 
-        cls.mod_src_application_MessageService_class = src.SayHello.Application.MessageService.MessageService
-        src.SayHello.Application.MessageService.MessageService = cls.mock_src_application_MessageService_class = MagicMock()
+        cls.mod_src_application_MessageService_class = src.SayHello.ApplicationLogic.MessageService.MessageService
+        src.SayHello.ApplicationLogic.MessageService.MessageService = cls.mock_src_application_MessageService_class = MagicMock()
         cls.mock_src_application_MessageService_service = MagicMock()
         cls.mock_src_application_MessageService_class.return_value = cls.mock_src_application_MessageService_service
 
@@ -162,7 +162,7 @@ class TestMain(TestCase):
     @classmethod
     def restore_MessageService(cls):
 
-        src.SayHello.Application.MessageService.MessageService = cls.mod_src_application_MessageService_class
+        src.SayHello.ApplicationLogic.MessageService.MessageService = cls.mod_src_application_MessageService_class
 
     @classmethod
     def restore_stdout(cls):
