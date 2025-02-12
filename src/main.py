@@ -8,13 +8,16 @@ from src.SayHello.ApplicationLogic.MessageService import MessageService
 
 def initialize() -> Flask:
     global _home_controller
+    (app, message_service) = create_flask_app()
+    _home_controller = HomeController(app, message_service)
+    return app
 
+def create_flask_app():
     load_dotenv()
     app = Flask(__name__, static_folder = './FluxServerFramework/assets', static_url_path = '/assets', template_folder = '.')
     message_service = MessageService(messages)
-    _home_controller = HomeController(app, message_service)
+    return (app, message_service)
 
-    return app
 
 def start():
     app = initialize()
@@ -29,5 +32,4 @@ def print_url(service_port):
     print(f"Application starting on http://localhost:{service_port}/")
 
 if __name__ == '__main__':
-
     start()
